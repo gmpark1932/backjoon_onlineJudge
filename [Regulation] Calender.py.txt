@@ -1,0 +1,64 @@
+# Problem Number: 6064
+# URL: https://www.acmicpc.net/problem/6064
+# Date: 2017.07.03
+# Purpose: Find Regulation
+
+def getGCD(a,b):
+    if b==0:
+        return a
+    else:
+        return int(getGCD(b,a%b))
+
+def getLCM(a,b):
+    if a > b :
+        return int(a * b / getGCD(a,b))
+    else:
+        return int(a * b / getGCD(b,a))
+
+def printAll(N,M):
+    dic = {}
+
+
+    for i in range(getLCM(M,N)):
+        a = (i) % (M) + 1
+        b = (i) % (N) + 1
+        print ("[%d]\t(%d,%d)\t[%5d,%5d,%5d,%5d]" % (i+1,a,b,(a-b)%N,0,0,0))
+        if (a-b)%N not in dic:
+            dic[(a-b)%N] = 1
+        else:
+            dic[(a-b)%N] = dic[(a-b)%N] + 1
+
+    print(dic)
+
+T = input()
+for i in range(int(T)):
+    M, N, x, y = input().split()
+
+    M = int(M)
+    N = int(N)
+    x = int(x)
+    y = int(y)
+
+    if N > M:
+        temp = N
+        N = M
+        M = temp
+        temp = x
+        x = y
+        y = temp
+    
+    dic = {}
+
+    for i in range( int(getLCM(N,M) / M)):
+        idx = int(((2*N-M)*i)%(N))
+        dic[idx] = i
+
+    P = int((x-y)%N)
+    
+    if P not in dic:
+        result = -1
+    else:
+        result = dic[P]*M + x
+
+    print(result)
+    
