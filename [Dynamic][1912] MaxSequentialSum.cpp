@@ -1,6 +1,6 @@
 // Problem Number: 1912						 
 // URL: https://www.acmicpc.net/problem/1912 
-// Date: 2017.07.10							 
+// Date: 2017.07.12							 
 // Purpose: 1) Dynamic Algorithm ( Save Already Found Cost )
 //			2) Set Sum[k] : max sum start from index k
 
