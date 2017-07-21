@@ -1,3 +1,8 @@
+// Problem Number: 2188						 
+// URL: https://www.acmicpc.net/problem/2188 
+// Date: 2017.07.21							 
+// Purpose: 1) BipartiteMatching
+
 #include <cstdio>
 #include <algorithm>
 #include <vector>
