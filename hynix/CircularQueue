@@ -1,0 +1,95 @@
+#include <cstdio>
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+
+using namespace std;
+
+#define QUEUESIZE 4 // Queue에 3개까지 넣을 수 있음.
+
+class CirQueue {
+private:
+	int data[QUEUESIZE];
+	int front, rear;
+
+public:
+	CirQueue() {
+		front = rear = 0;
+	}
+
+	bool isFull(void) {
+		if ((rear + 1) % QUEUESIZE == front)
+			return true;
+		else return false;
+	}
+
+	bool isEmpty(void) {
+		return front == rear;
+	}
+
+	void Add(int x) {
+		if (isFull()) return;
+		rear = (rear + 1) % QUEUESIZE;
+		data[rear] = x;
+	}
+
+	int Delete(void) {
+		if (isEmpty()) return -1;
+		front = (front + 1) % QUEUESIZE;
+		return data[front];
+	}
+
+	void printAll(void) {
+		cout << "QUEUE: ";
+		for (int i = ((front + 1) % QUEUESIZE); i != (rear+1)%QUEUESIZE; i = ((i + 1) % QUEUESIZE)) {
+			cout << data[i] << " ";
+		}
+		cout << endl;
+	}
+};
+
+void CheckFullEmpty(CirQueue q) {
+	cout << "EMPTY: " << q.isEmpty() << endl;
+	cout << "FULL: " << q.isFull() << endl;
+}
+
+int main(void) {
+	CirQueue q;
+	CheckFullEmpty(q);
+
+	q.Add(1);
+	CheckFullEmpty(q);
+	q.printAll();
+
+	q.Add(2);
+	CheckFullEmpty(q);
+	q.printAll();
+
+	q.Add(3);
+	CheckFullEmpty(q);
+	q.printAll();
+
+	q.Add(4);
+	CheckFullEmpty(q);
+	q.printAll();
+
+	cout <<"DELETE: " << q.Delete() << endl;;
+	CheckFullEmpty(q);
+	q.printAll();
+
+	cout << "DELETE: " << q.Delete() << endl;;
+	CheckFullEmpty(q);
+	q.printAll();
+
+	cout << "DELETE: " << q.Delete() << endl;;
+	CheckFullEmpty(q);
+	q.printAll();
+	cout << "DELETE: " << q.Delete() << endl;;
+	CheckFullEmpty(q);
+	q.printAll();
+
+
+	system("pause");
+
+	return 0;
+}
