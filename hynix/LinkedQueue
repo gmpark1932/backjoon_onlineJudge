@@ -1,0 +1,84 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+
+using namespace std;
+
+typedef struct Node{
+	int val;
+	struct Node* next;
+}Node;
+
+class Queue {
+private:
+	Node* front, *rear;
+	int count;
+
+public:
+	Queue() {
+		front = rear = nullptr;
+		int count;
+	}
+
+	void Add(int x) {
+		Node* a = (Node*)malloc(sizeof(Node));
+		a->val = x;
+		a->next = nullptr;
+		if (isEmpty()) {
+			front = rear = a;
+		}
+		else {
+			rear->next = a;
+			rear = a;
+		}
+		count++;
+	}
+
+	int Del(void) {
+		if (isEmpty()) return -1;
+		Node* next_front;
+
+		int result = front->val;
+		if (count == 1) rear = nullptr;
+		next_front = front->next;
+		free(front);
+		front = next_front;
+		count--;
+		return result;
+	}
+
+	bool isEmpty(void) {
+		return count == 0;
+	}
+
+	void printAll(void) {
+		Node* ptr = front;
+		while (ptr != nullptr) {
+			cout << ptr->val << " ";
+			ptr = ptr->next;
+		}
+		cout << endl;
+	}
+};
+
+int main(void) {
+	Queue q;
+
+	cout << q.isEmpty() << endl;
+	q.Add(1);
+	q.printAll();
+	cout << q.isEmpty() << endl;
+	q.Add(2);
+	q.printAll();
+	int s = q.Del();
+	cout << "s : " << s << endl;
+	q.printAll();
+	cout << q.isEmpty() << endl;
+	s = q.Del();
+	cout << "s : " << s << endl;
+	q.printAll();
+	cout << q.isEmpty() << endl;
+	system("pause");
+	return 0;
+}
