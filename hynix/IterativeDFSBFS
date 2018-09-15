@@ -1,0 +1,121 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_N 1010
+#define MAX_M 10010
+
+typedef struct {
+	int data[MAX_M];
+	int top;
+}Stack;
+
+typedef struct {
+	int data[MAX_M];
+	int front, rear;
+}Queue;
+
+int graphEdge[MAX_N][MAX_N];
+int alreadyVisit[MAX_N];
+Queue bfs_queue;
+Stack dfs_stack;
+
+void StackInit(Stack *s) {
+	s->top = -1;
+}
+
+void StackPush(Stack *s, int val) {
+	s->top++;
+	s->data[s->top] = val;
+}
+
+bool StackEmpty(Stack s) {
+	return s.top == -1;
+}
+
+int StackPop(Stack*s) {
+	return s->data[s->top--];
+}
+
+void QueueInit(Queue *q) {
+	q->front = q->rear = 0;
+}
+
+bool QueueEmpty(Queue q) {
+	return q.front == q.rear;
+}
+
+void QueuePush(Queue *q, int val) {
+	q->rear = (q->rear + 1) % MAX_M;
+	q->data[q->rear] = val;
+}
+
+int QueuePop(Queue *q) {
+	if (QueueEmpty(*q)) return -1;
+	q->front = (q->front + 1) % MAX_M;
+	return q->data[q->front];
+}
+
+void printDfs(int val_num) {
+	while (!StackEmpty(dfs_stack)) {
+		int start = StackPop(&dfs_stack);
+		
+		if (alreadyVisit[start] == 1)
+			continue;
+
+		printf("%d ", start);
+		alreadyVisit[start] = 1;
+
+		for (int i = val_num; i >= 1; i--) {
+			if (alreadyVisit[i] == 0 && graphEdge[i][start] == 1)
+				StackPush(&dfs_stack, i);
+		}
+	}
+}
+
+void printBfs(int val_num) {
+	while (!QueueEmpty(bfs_queue)) {
+		int start = QueuePop(&bfs_queue);
+		printf("%d ", start);
+
+		for (int i = 1; i <= val_num; i++) {
+			if (graphEdge[i][start] == 1 && alreadyVisit[i] == 0) {
+				QueuePush(&bfs_queue, i);
+				alreadyVisit[i] = 1;
+			}
+		}
+	}
+	printf("\n");
+}
+
+int main(void) {
+	int N, M, V;
+
+	memset(graphEdge, 0x00, sizeof(graphEdge));
+	memset(alreadyVisit, 0x00, sizeof(alreadyVisit));
+
+	scanf("%d %d %d", &N, &M, &V);
+
+	for (int m = 0; m < M; m++) {
+		int v1, v2;
+		scanf("%d %d", &v1, &v2);
+
+		graphEdge[v1][v2] = graphEdge[v2][v1] = 1;
+	}
+
+	StackInit(&dfs_stack);
+	StackPush(&dfs_stack, V);
+	printDfs(N);
+	printf("\n");
+
+	QueueInit(&bfs_queue);
+	memset(alreadyVisit, 0x00, sizeof(alreadyVisit));
+	QueuePush(&bfs_queue,V);
+	alreadyVisit[V] = 1;
+	printBfs(N);
+
+	system("pause");
+
+	return 0;
+}
