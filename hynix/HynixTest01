@@ -1,0 +1,49 @@
+#include <cstdio>
+#include <iostream>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+bool CheckListSame(list<int> listA, list<int> listB) {
+	list<int>::iterator itrA = listA.begin();
+	list<int>::iterator itrB = listB.begin();
+
+	for(; itrA != listA.end(); itrA++, itrB++) {
+		if(*itrA != *itrB) return false;
+	}
+	return true;
+}
+
+bool CheckSame(vector<int> arrA, vector<int> arrB) {
+	if(arrA.size() != arrB.size()) return false;
+
+	//MakeList
+	list<int> listA, listB;
+	for(int i=0; i<arrA.size(); i++) {
+		listA.push_back(arrA[i]);
+		listB.push_back(arrB[i]);
+	}
+
+	for(int i=0; i<arrA.size(); i++) {
+		if(CheckListSame(listA, listB) == true) return true;
+		int temp = listA.front();
+		listA.pop_front();
+		listA.push_back(temp);
+	}
+	
+	return false;
+}
+
+int main(void) {
+	vector<int> arrA ={ 1,2,3,4,5 };
+	vector<int> arrB ={ 2,3,4,5,1 };
+	vector<int> arrC ={ 1,3,5,2,4 };
+
+	cout << CheckSame(arrA, arrB) << endl;
+	cout << CheckSame(arrA, arrC) << endl;
+
+	system("pause");
+
+	return 0;
+}
