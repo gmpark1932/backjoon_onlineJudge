@@ -1,0 +1,60 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <list>
+#include <deque>
+#include <cstring>
+#include <bitset>
+
+using namespace std;
+
+#define MAX_N 22
+#define MAX_DESERT 101
+
+int desert_array[MAX_N][MAX_N];
+
+typedef struct {
+	int a, b;
+	vector<vector<bitset<MAX_DESERT>>> bit_mem;
+}MemNode;
+
+vector<vector<MemNode>> memory(MAX_N, vector<MemNode>(MAX_N));
+
+void InitMemory(void) {
+	for (int i = 0; i < MAX_N; i++) {
+		for (int j = 0; j < MAX_N; j++) {
+			for (int n = 0; n < MAX_N; n++) {
+				vector<bitset<MAX_DESERT>> element(MAX_N);
+				memory[i][j].bit_mem.push_back(element);
+			}
+		}
+	}
+
+}
+
+bitset<MAX_DESERT> GetPathBitSet(pair<int, int> cur_point, int up_right, int up_left) {
+
+}
+
+int FindLongestPath(pair<int, int> cur_point) {
+
+
+}
+
+int Solution(int N) {
+	int result;
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+
+		}
+	}
+
+	return result;
+}
+
+int main(void) {
+
+
+	return 0;
+}
