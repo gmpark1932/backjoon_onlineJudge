@@ -1,0 +1,89 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <list>
+#include <deque>
+#include <cstring>
+
+#define MAX_N 10
+#define MAX_K 6
+
+using namespace std;
+
+int height_array[MAX_N][MAX_N] = {0};
+
+int memory[MAX_N][MAX_N][MAX_N][MAX_N][MAX_K];
+// 현재 위치 2개 + 깎을 위치 2개 + 깎을 높이
+
+const pair<int,int> move_up = make_pair(-1,0);
+const pair<int,int> move_down = make_pair(1,0);
+const pair<int,int> move_left = make_pair(0,-1);
+const pair<int,int> move_right = make_pair(0,1);
+
+enum Direction {UP,DOWN,LEFT,RIGHT};
+
+bool CanMove(pair<int,int> cur_point,Direction dir){
+	switch(dir){
+		
+	}
+}
+
+void InitMemory(void) {
+	memset(memory, 0xff, sizeof(memory));
+}
+
+int FindLongestPath(pair<int, int> cur_point,pair<int,int> dig_point,int dig_height){
+	if(memory[cur_point.first][cur_point.second][dig_point.first][dig_point.second][dig_height] != -1)
+		return memory[cur_point.first][cur_point.second][dig_point.first][dig_point.second][dig_height];
+
+	
+}
+
+int FindStartPoint(int N,vector<pair<int,int>> &start_array){
+	int h = 0;
+	for(int i=0;i<N;i++){
+		for(int j=0;j<N;j++){
+			if(height_array[i][j] > h) h = height_array[i][j];
+		}
+	}
+
+	int count = 0;
+	for(int i=0;i<N;i++){
+		for(int j=0;j<N;j++){
+			if(height_array[i][j] == h){
+				start_array.push_back(make_pair(i,j));
+				count++;
+			}
+		}
+	}
+
+	return count;
+}
+
+int Solution(int N, int K){
+	int result = 0;
+	
+	vector<pair<int,int>> start_array;
+	int start_number = FindStartPoint(N,start_array);
+
+	for(int i=0;i<N;i++){
+		for(int j=0;j<N;j++){
+			for(int k=1;k<=K;k++){
+				height_array[i][j] -= k;
+				for(int c=0;c<start_number;c++){
+					int temp_result = FindLongestPath(start_array[c],make_pair(i,j),k);
+					if(temp_result > result) result = temp_result;
+				}
+				height_array[i][j] += k;
+			}
+		}
+	}
+
+	return result;
+}
+
+int main(void) {
+	
+
+	return 0;
+}
