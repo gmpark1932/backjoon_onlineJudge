@@ -11,41 +11,101 @@ using namespace std;
 #define MAX_N 22
 #define MAX_DESERT 101
 
-int desert_array[MAX_N][MAX_N];
+pair<bool,bitset<MAX_DESERT>> g_memory_array[MAX_N][MAX_N][MAX_N][MAX_N];
+// bool : 실패 플래그, true면 해당 move로는 desert가 중복됨
+int g_desert_array[MAX_N][MAX_N];
 
-typedef struct {
-	int a, b;
-	vector<vector<bitset<MAX_DESERT>>> bit_mem;
-}MemNode;
+pair<int, int> getUpRightPoint(pair<int, int> cur_point, int move) {
+	return { cur_point.first - move,cur_point.second + move };
+}
 
-vector<vector<MemNode>> memory(MAX_N, vector<MemNode>(MAX_N));
+pair<int, int> getUpLeftPoint(pair<int, int> cur_point, int move) {
+	return { cur_point.first - move, cur_point.second - move };
+}
 
-void InitMemory(void) {
-	for (int i = 0; i < MAX_N; i++) {
-		for (int j = 0; j < MAX_N; j++) {
-			for (int n = 0; n < MAX_N; n++) {
-				vector<bitset<MAX_DESERT>> element(MAX_N);
-				memory[i][j].bit_mem.push_back(element);
+void initGlobalMemoryArray(void) {
+	int a, b, c, d;
+
+	for(a=0; a<MAX_N; a++) {
+		for(b=0; b<MAX_N; b++) {
+			for(c=0; c<MAX_N; c++) {
+				for(d=0; d<MAX_N; d++) {
+					g_memory_array[a][b][c][d].first = false;
+					g_memory_array[a][b][c][d].second.reset();
+				}
 			}
 		}
 	}
-
 }
 
-bitset<MAX_DESERT> GetPathBitSet(pair<int, int> cur_point, int up_right, int up_left) {
-
+bool insertBitInMemory(pair<int, int> cur_point, int up_left, int up_right, int val) {
+	pair<bool, bitset<MAX_DESERT>> &target = g_memory_array[cur_point.first][cur_point.second][up_left][up_right];
+	if(target.first == false && target.second[val] == 0) {
+		target.second[val] = 1;
+		return true;
+	}
+	else {
+		target.first = true;
+		return false;
+	}
 }
 
-int FindLongestPath(pair<int, int> cur_point) {
+int FindLongestPath_StartByOnePoint(pair<int, int> cur_point,int N) {
+	for(int i=1;cur_point.first - i>=0; i++) {
+		for(int j=1;cur_point.second + j <= N-1; j++) {
+			bool canInsert = true;
+			if(j == 1) {
+				if(i == 1) {
+					for(int a = 0; a < 2; a++) {
+						for(int b=0; b<2; b++) {
+							pair<int, int> target_point = getUpLeftPoint(cur_point, a);
+							target_point = getUpRightPoint(target_point, b);
+							int val = g_desert_array[target_point.first][target_point.second];
+							bool insertSuccess = insertBitInMemory(cur_point, a, b, val);
+							if(insertSuccess == false)
+								canInsert = false;
+						}
+					}
+				}
+				else/*j == 1 && i != 1*/ {
+					pair<bool, bitset<MAX_DESERT>> &target = g_memory_array[cur_point.first][cur_point.second][i-1][j];
+					if(target.first == true) {
+						canInsert = false;
+					}
+					else {
+						g_memory_array[cur_point.first][cur_point.second][i][j].second = target.second;
+						for(int a=0; a<2; a++) {
+							pair<int, int> target_point = getUpLeftPoint(cur_point, i);
+							target_point = getUpRightPoint(target_point, a);
+							int val = g_desert_array[target_point.first][target_point.second];
+							bool insertSuccess = insertBitInMemory(cur_point, i, j, val);
+							if(insertSuccess == false)
+								canInsert = false;
+						}
+					}
+				}
+			}//End of j == 1
 
+			pair<bool, bitset<MAX_DESERT>> &base_memory = g_memory_array[cur_point.first][cur_point.second][i][j-1];
+			pair<bool, bitset<MAX_DESERT>> &target_memory = g_memory_array[cur_point.first][cur_point.second][i][j];
+			target_memory.second = base_memory.second;
+			for(int a=0; a<=i; a++) {
+				pair<int, int> target_point = getUpLeftPoint(cur_point, a);
+				target_point = getUpRightPoint(target_point, j);
 
+				//여기부터 다시 작성하면 됩니다.
+			}
+		}
+	}
 }
 
 int Solution(int N) {
 	int result;
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
+	initGlobalMemoryArray();
+
+	for(int i = 0; i < N; i++) {
+		for(int j = 0; j < N; j++) {
 
 		}
 	}
